@@ -363,6 +363,17 @@ export default function App() {
     addToast('success', 'Event Scheduled', `Added "${newEvent.title}" to institutional calendar.`);
   };
 
+  const handleUpdateEvent = (updatedEvent: AcademicEvent) => {
+    setEvents((prev) => prev.map((e) => (e.id === updatedEvent.id ? updatedEvent : e)));
+    addToast('info', 'Event Updated', `Updated schedule for "${updatedEvent.title}".`);
+  };
+
+  const handleDeleteEvent = (id: string) => {
+    const target = events.find((e) => e.id === id);
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+    addToast('info', 'Event Removed', `Removed "${target?.title || 'Event'}" from calendar.`);
+  };
+
   const handleMarkNotificationRead = (id: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
@@ -559,7 +570,12 @@ export default function App() {
       )}
 
       {currentRoute === 'calendar' && (
-        <AdminCalendar events={events} onAddEvent={handleAddEvent} />
+        <AdminCalendar
+          events={events}
+          onAddEvent={handleAddEvent}
+          onUpdateEvent={handleUpdateEvent}
+          onDeleteEvent={handleDeleteEvent}
+        />
       )}
 
       {currentRoute === 'communication' && (
